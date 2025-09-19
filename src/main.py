@@ -903,8 +903,8 @@ def render_html(payload) -> None:
     html = render_html_table(payload, title="Stock Signals", output_file='./docs/index.html')
     print("Wrote index.html with", len(payload), "rows")
 
-    with open("index.html", "w") as f:
-        f.write(html)
+    # with open("index.html", "w") as f:
+    #     f.write(html)
 
 
 # ---------- Push Notification ----------
