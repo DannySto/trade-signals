@@ -4,7 +4,7 @@ from datetime import datetime
 
 def render_html_table(
     rows: List[Dict],
-    title: str = "Table",
+    title: str = "Stock Signals",
     output_file: str = "./docs/index.html",
 ) -> str:
     """Render a list of dicts as a complete HTML page containing a styled single-row-per-dict table with inlined, minified CSS."""
@@ -53,6 +53,8 @@ def render_html_table(
                 return f"<td class='pos_price'>{price}</td>"
             elif price < ycp:
                 return f"<td class='neg_price'>{price}</td>"
+        elif "name" in row and val == row.get("name"):
+            return f"<td class='name'>{txt}</td>"
 
         elif "<a href" in lower_txt:
             return f"<td class='ticker'>{txt}</td>"
@@ -95,26 +97,28 @@ def render_html_table(
     # --- CSS block ---
     css = """
     body { font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; padding:6px; background:linear-gradient(135deg,#f0f4f8,#d9e2ec);}
-    .card { background:white; border-radius:6px; box-shadow:0 6px 10px rgba(0,0,0,0.1); padding:4px; max-width:85%; margin:auto; overflow-x:auto;}
+    .card { background:white; border-radius:6px; box-shadow:0 6px 10px rgba(0,0,0,0.1); padding:4px; max-width:85%; margin:1px; overflow-x:auto;}
     table { border-collapse:collapse; width:100%; border-radius:6px; overflow:hidden;}
-    caption { text-align:left; font-size:1rem; padding-bottom:7px; font-weight:400; color:#243b53;}
-    th,td { color:#333332; padding:5px 6px; border-bottom:1px solid #ced9e5; text-align:left; vertical-align:top; font-size:0.7rem;}
+    caption { text-align:center; font-size:1rem; padding-bottom:7px; font-weight:400; color:#243b53;}
+    th,td { color:#333332; padding:5px 6px; border-bottom:1px solid #ced9e5; text-align:center; vertical-align:top; font-size:0.7rem;}
     th { background:#f8fafc; color:#334e68; font-weight:400; text-transform:uppercase;}
-    tr:hover td { background:#e6f0fa; color:#35362c; transition:background 0.5s ease;}
+    tr:hover td { border-bottom: 1px solid #ee6c6c; border-top-color: 1px solid #ee6c6c; transition:background 0.5s ease;}
     .small { font-size:0.55rem; color:#52667a; margin-top:10px;}
     .positive { color:#fff; background-color:#709a8b;}
     .negative { color:#fff; background-color:#ee6c6c;}
     .small_pos { color:#fff; background-color:#9ccbba;}
     .small_neg { color:#fff; background-color:#ddac78;}
     .neutral { color:#35362c; background-color:#f6f6e5;}
-    .ticker { color:#333332; text-align:center; border-radius:16px; font-weight:400; padding:3px 4px; background-color:#f0f4f8;}
+    .ticker { color:#333332; text-align:center; vertical-align: middle; border-radius:16px; font-weight:400; padding:3px 4px; background-color:#f0f4f8;}
     .neg_price { color:#d64545;}
     .pos_price { color:#709a8b;}
     .sma_neg { color:#d64545;}
     .sma_pos { color:#709a8b;}
+    .name { text-align:left; font-weight:600; color:#243b53;}
+    .name:hover {cursor:default;}
     .positive:hover { background-color:#f1f1f1;}
     @media (max-width:768px){
-      th,td{ padding:8px 10px; font-size:0.85rem;}
+      th,td{ padding:6px 2px; font-size:0.6rem;}
       caption{ font-size:1.2rem;}
       .small{ font-size:0.5rem;}
     }
@@ -155,3 +159,4 @@ def render_html_table(
             f.write(html_page)
 
     return html_page
+

@@ -61,6 +61,7 @@ junit.xml
 scan.log
 coverage.xml
 htmlcov
+payload.json
 
 db.json
 log_analyse.json

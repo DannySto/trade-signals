@@ -21,7 +21,44 @@ FAST, SLOW, SIGNAL = 12, 26, 9
 SMA_WINDOW = 30
 RSI_PERIOD = 14
 
-TICKERS = ('RHM.VI','HUT,ASPI', 'KIN2.DE', 'DRH.SG', 'CJ6.F', '49V.F', 'BSPA.F', 'RQ0.F', '98W.F', 'NVDA', 'VA3.F', 'TOA.F', 'NMM.F', 'MSFT', 'AAPL', 'AMZN', 'GOOGL', 'IBM', 'INTC', 'META', 'PA2.F', 'YO0.F', 'BTC-EUR', 'ETH-EUR', 'XRP-EUR', 'LTC-EUR', 'ADA-EUR', 'BNB-EUR', 'DOT-EUR', 'SOL-EUR')
+# ---------- Tickers ----------
+TICKERS = {
+    'RHM.VI',
+    'EJD.MU',
+    'HUT',
+    'ASPI',
+    'KIN2.DE',
+    'DRH.SG',
+    'CJ6.F',
+    '49V.F', 
+    'BSPA.F', 
+    'RQ0.F', 
+    '98W.F', 
+    'NVDA',
+    'F8P.F',
+    'ASMI.VI',
+    'VA3.F', 
+    'YO0.F',
+    'T0A.F', 
+    'NMM.F', 
+    'MSFT', 
+    'AAPL', 
+    'AMZN', 
+    'GOOGL', 
+    'IBM', 
+    'INTC', 
+    'META', 
+    'PA2.F', 
+    'YO0.F', 
+    'BTC-EUR', 
+    'ETH-EUR', 
+    'XRP-EUR', 
+    'LTC-EUR', 
+    'ADA-EUR', 
+    'BNB-EUR', 
+    'DOT-EUR', 
+    'SOL-EUR'
+    }
 
 
 # ---------- Indicator Weights ----------
@@ -360,15 +397,6 @@ def classify(score, mode="entry"):
 
     else:
         raise ValueError("mode must be 'entry', 'exit', or 'performance'")
-
-
-# def classify(score, mode):
-#     if mode == "performance":
-#         return "good" if score >= 5 else "neutral" if score >= -1 else "poor"
-#     elif mode == "entry":
-#         return "strong buy" if score >= 5 else "buy" if score >= 2 else "neutral" if score >= -1 else "not now" if score >= -4 else "avoid"
-#     else:
-#         return "strong sell" if score >= 5 else "sell" if score >= 2 else "neutral" if score >= -1 else "not now" if score >= -4 else "avoid"
 
 
 def sma30_scores(last):
@@ -838,19 +866,20 @@ def check_signal(df: pd.DataFrame) -> dict:
 
     ticker_name = get_fund_name(df.attrs["ticker"])
 
+
     payload = {
         "ticker": ticker,
-        "title": ticker_name,
+        "name": ticker_name,
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
-        "performance": performance_state,
+        "perform": performance_state,
         "entry": entry_state,
         "exit": exit_state,
-        "price_trend": price_trend,
-        "bollinger": band_position,
-        "rsi_condition": rsi_condition,
+        "trend": price_trend,
+        "bb": band_position,
+        "rsi": rsi_condition,
         "volume": volume_condition,
-        "pvt_trend": pvt_trend,
+        "pvt": pvt_trend,
         "macd_trend_5": macd_trend_5,
         "signal": f"{last['MACD_SIGNAL']:.4f}",
         "histogram": f"{last['MACD_HIST']:.4f}",
@@ -858,7 +887,7 @@ def check_signal(df: pd.DataFrame) -> dict:
         "sma30": f"{above_sma30_pct:.2f}%",
         "sma50": f"{above_sma50_pct:.2f}%",
         "sma200": f"{above_sma200_pct:.2f}%",
-        "yahoo_verdict": yahoo_rec.get("verdict", "N/A"),
+        "yahoo": yahoo_rec.get("verdict", "N/A"),
     }
 
     return payload
@@ -902,9 +931,6 @@ def render_html(payload) -> None:
     # loop through payload and append HTML to file index.html
     html = render_html_table(payload, title="Stock Signals", output_file='./docs/index.html')
     print("Wrote index.html with", len(payload), "rows")
-
-    # with open("index.html", "w") as f:
-    #     f.write(html)
 
 
 # ---------- Push Notification ----------
@@ -953,6 +979,10 @@ async def analyze_and_alert(tickers):
 
         except Exception as e:
             log.error(f"Error processing {ticker}: {e}")
+        # write payload to payload.json
+    # with open("payload.json", "w") as f:
+    #     import json
+    #     json.dump(payloads, f, indent=2)
 
     if PUSH and payloads:
         await send_push(payloads)
@@ -964,10 +994,11 @@ if __name__ == "__main__":
     configure_logging()
     log.info("Starting stock analysis...")
 
-    # open payload.json and render html table
     # if os.path.exists("payload.json"):
     #     import json
     #     with open("payload.json", "r") as f:
     #         payloads = json.load(f)
     #     render_html(payloads)
+    #     exit()
+
     asyncio.run(analyze_and_alert(TICKERS))
