@@ -342,9 +342,9 @@ def classify(score, mode="entry"):
         elif score >= 0.4:
             return "neutral"
         elif score >= 0.2:
-            return "cautious-sell"
+            return "consider-keep"
         else:
-            return "no-exit"
+            return "don't-exit"
 
     elif mode == "performance":
         if score >= 0.8:

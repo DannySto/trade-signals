@@ -57,24 +57,28 @@ def render_html_table(
         elif "<a href" in lower_txt:
             return f"<td class='ticker'>{txt}</td>"
 
+        # NEGATIVE
         elif any(word in lower_txt for word in [
-            "no-exit","negative","strong-sell","poor","oversold","below",
+            "no-entry","negative","strong-sell","poor","oversold","below",
             "decreasing","below-band","low"
         ]):
             return f"<td class='negative'>{escape(txt)}</td>"
-
+        # SMALL NEGATIVE
         elif any(word in lower_txt for word in ["cautious-buy","sell","weak","avoid"]):
             return f"<td class='small_neg'>{escape(txt)}</td>"
 
-        elif any(word in lower_txt for word in ["n/a","no","hold","neutral","moderate"]):
+        # NEUTRAL
+        elif any(word in lower_txt for word in ["hold","neutral", "moderate"]):
             return f"<td class='neutral'>{escape(txt)}</td>"
 
-        elif any(word in lower_txt for word in ["buy","cautious-sell","good","normal","stable"]):
+        # SMALL POSITIVE
+        elif any(word in lower_txt for word in ["buy","cautious-sell","good", "yes", "consider-keep", "normal","stable"]):
             return f"<td class='small_pos'>{escape(txt)}</td>"
 
+        # POSITIVE
         elif any(word in lower_txt for word in [
-            "positive","strong-buy","excellent","increasing","strong","good",
-            "above","high","yes","overbought"
+            "positive","strong-buy", "don't-exit", "excellent","increasing","strong","good",
+            "above","high","overbought"
         ]):
             return f"<td class='positive'>{escape(txt)}</td>"
 
