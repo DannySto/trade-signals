@@ -53,9 +53,10 @@ def render_html_table(
                 return f"<td class='pos_price'>{price}</td>"
             elif price < ycp:
                 return f"<td class='neg_price'>{price}</td>"
-        elif "name" in row and val == row.get("name"):
+        elif "name" in row and "sector" in row and val == row.get("name"):
             return f"<td class='name'>{txt}</td>"
-
+        elif "sector" in row and val == row.get("sector"):
+            return f"<td class='sector'>{txt}</td>"
         elif "<a href" in lower_txt:
             return f"<td class='ticker'>{txt}</td>"
 
@@ -114,7 +115,8 @@ def render_html_table(
     .pos_price { color:#709a8b;}
     .sma_neg { color:#d64545;}
     .sma_pos { color:#709a8b;}
-    .name { text-align:left; font-weight:600; color:#243b53;}
+    .name { text-align:left; font-weight:500; color:#243b53;}
+    .sector { text-align:left; font-style:italic; color:#52667a;}
     .name:hover {cursor:default;}
     .positive:hover { background-color:#f1f1f1;}
     @media (max-width:768px){

@@ -608,7 +608,7 @@ def pvt_scores(pvt, upper_band, lower_band, mid_band=None):
     }
 
 
-def check_signal(df: pd.DataFrame) -> dict:
+def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
     if df.empty or len(df) < 3:
         return None
     last, prev = df.iloc[-1], df.iloc[-2]
@@ -726,29 +726,29 @@ def check_signal(df: pd.DataFrame) -> dict:
     macd_scores_dict = compute_macd_scores(
         last["MACD"], last["MACD_SIGNAL"], last["MACD_HIST"], macd_hist_condition
     )
-    log.info(f"MACD Scores: {macd_scores_dict}")
+    log.debug(f"MACD Scores: {macd_scores_dict}")
 
     # compute Bollinger scores
     bollinger_scores_dict = compute_bollinger_scores(
         last_close, upper_band.iloc[-1], lower_band.iloc[-1], rolling_mean.iloc[-1]
     )
-    log.info(f"Bollinger Scores: {bollinger_scores_dict}")
+    log.debug(f"Bollinger Scores: {bollinger_scores_dict}")
 
     # compute RSI scores
     rsi_scores_dict = compute_rsi_scores(last_rsi)
-    log.info(f"RSI Scores: {rsi_scores_dict}")
+    log.debug(f"RSI Scores: {rsi_scores_dict}")
 
     # compute SMA30 scores
     sma30_scores_dict = compute_sma_scores(last["Close"], last["SMA30"])
-    log.info(f"SMA30 Scores: {sma30_scores_dict}")
+    log.debug(f"SMA30 Scores: {sma30_scores_dict}")
 
     # compute SMA50 scores
     sma50_scores_dict = compute_sma_scores(last["Close"], last["SMA50"])
-    log.info(f"SMA50 Scores: {sma50_scores_dict}")
+    log.debug(f"SMA50 Scores: {sma50_scores_dict}")
 
     # compute SMA200 scores
     sma200_scores_dict = compute_sma_scores(last["Close"], last["SMA200"])
-    log.info(f"SMA200 Scores: {sma200_scores_dict}")
+    log.debug(f"SMA200 Scores: {sma200_scores_dict}")
 
     # compute SMA scores
     sma_perfomance = (
@@ -864,12 +864,13 @@ def check_signal(df: pd.DataFrame) -> dict:
     # Yahoo recommendation
     yahoo_rec = get_recommendation(df.attrs["ticker"])
 
-    ticker_name = get_fund_name(df.attrs["ticker"])
+    # ticker_name, sector = get_fund_name(df.attrs["ticker"])
 
 
     payload = {
         "ticker": ticker,
         "name": ticker_name,
+        "sector": sector,
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
         "perform": performance_state,
@@ -896,15 +897,26 @@ def check_signal(df: pd.DataFrame) -> dict:
 def get_fund_name(ticker: str) -> str:
     """
     Fetch the full fund/company name from Yahoo Finance given a ticker.
+    Fetch the sector from Yahoo Finance given a ticker.
     """
     try:
         stock = yf.Ticker(ticker)
         info = stock.info
-        return (
-            info.get("longName")
-            or info.get("shortName")
-            or f"No name found for {ticker}"
-        )
+        sector = get_sector(ticker)
+        longname = (info.get("longName") or info.get("shortName") or "N/A")
+        return longname, sector
+    except Exception as e:
+        return f"Error fetching data for {ticker}: {e}"
+    
+
+def get_sector(ticker: str) -> str:
+    """
+    Fetch the sector from Yahoo Finance given a ticker.
+    """
+    try:
+        stock = yf.Ticker(ticker)
+        info = stock.info
+        return info.get("sector", "N/A")
     except Exception as e:
         return f"Error fetching data for {ticker}: {e}"
 
@@ -961,7 +973,28 @@ async def send_push(payloads):
 async def analyze_and_alert(tickers):
     payloads = []
     loop = asyncio.get_running_loop()
+    # fetch all ticker names and sectors from the list and store in a dict
+    tickers_info = []
     for ticker in tickers:
+        ticker_name, sector = await loop.run_in_executor(None, get_fund_name, ticker)
+        tickers_info.append((ticker, ticker_name, sector))
+
+
+    # create a list with ticker, ticker_name, sector
+    tickers_info = [{"ticker": ticker, "name": ticker_name, "sector": sector} for ticker, ticker_name, sector in tickers_info]
+
+    for info in tickers_info:
+        ticker = info["ticker"]
+        ticker_name = info["name"]
+        sector = info["sector"]
+        log.debug(f"Analyzing {ticker_name} ({ticker}) in sector {sector}")
+        # sort tickers by sector alphabetically
+    tickers_info.sort(key=lambda x: x["sector"] or "")
+
+    for info in tickers_info:
+        ticker = info["ticker"]
+        ticker_name = info["name"]
+        sector = info["sector"]
         try:
             # run blocking yfinance fetch in executor
             df = await loop.run_in_executor(None, fetch_history, ticker)
@@ -970,12 +1003,12 @@ async def analyze_and_alert(tickers):
                 log.warning(f"No data for {ticker}, skipping.")
                 continue
             df_ind = compute_indicators(df)
-            log.info(f"Computed indicators for {ticker}")
-            payload = check_signal(df_ind)
-            log.info(f"Checked signals for {ticker}")
+            log.debug(f"Computed indicators for {ticker}")
+            payload = check_signal(df_ind, ticker_name, sector)
+            log.debug(f"Checked signals for {ticker}")
             if payload:
                 payloads.append(payload)
-                log.info(f"Generated payload for {ticker}")
+                log.debug(f"Generated payload for {ticker}")
 
         except Exception as e:
             log.error(f"Error processing {ticker}: {e}")
@@ -1000,5 +1033,4 @@ if __name__ == "__main__":
     #         payloads = json.load(f)
     #     render_html(payloads)
     #     exit()
-
     asyncio.run(analyze_and_alert(TICKERS))
