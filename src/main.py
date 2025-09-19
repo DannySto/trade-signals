@@ -53,11 +53,6 @@ TICKERS = {
     'BTC-EUR', 
     'ETH-EUR', 
     'XRP-EUR', 
-    'LTC-EUR', 
-    'ADA-EUR', 
-    'BNB-EUR', 
-    'DOT-EUR', 
-    'SOL-EUR'
     }
 
 
