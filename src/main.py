@@ -528,11 +528,19 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
         if last["SMA200"] != 0
         else 0
     )
-    # SMA  MACD Trend over the last 5 periods
     # if price is above SMA30/50/200 and SMA is increasing → positive trend
     # if price is below SMA30/50/200 and SMA is decreasing → negative trend
-    sma30_trend = "/\\" if (last["Close"] > last["SMA30"] and last["SMA30"] > prev["SMA30"]) else "\\/" if (last["Close"] < last["SMA30"] and last["SMA30"] < prev["SMA30"]) else "="
+    # sma30_trend = "/\\" if (last["Close"] > last["SMA30"].tail(5).tolist() and last["SMA30"] > prev["SMA30"]) else "\\/" if (last["Close"] < last["SMA30"] and last["SMA30"] < prev["SMA30"]) else "="
 
+        # SMA Trend over the last 5 periods
+    sma30_values = df["SMA30"].tail(5).tolist()
+    if len(sma30_values) >= 5:
+        if all(x < y for x, y in zip(sma30_values, sma30_values[1:])):
+            sma30_trend = "/\\"
+        elif all(x > y for x, y in zip(sma30_values, sma30_values[1:])):
+            sma30_trend = "\\/"
+        else:
+            sma30_trend = "="
 
     # ----------  compute individual scores ----------
     log.info(f"---------- Computing Scores for {ticker} ---------")

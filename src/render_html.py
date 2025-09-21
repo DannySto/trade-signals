@@ -135,7 +135,7 @@ def render_html_table(
     .positive { color:#fff; background-color:#038911;}
     .negative { color:#fff; background-color:#800101;}
     .small_pos { color:#fff; background-color:#0b6217;}
-    .small_neg { color:#fff; background-color:#eca865;}
+    .small_neg { color:#fff; background-color:#e10c0d;}
     .neutral { color:#fff; background-color:#eb9d00;}
     .ticker { color:#fff; text-align:center; vertical-align: middle; border-radius:16px; font-weight:400; padding:3px 4px; background-color:#bec0bf;}
     .neg_price { color:#d64545;}
