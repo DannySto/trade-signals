@@ -66,7 +66,13 @@ def render_html_table(
                 return f"<td class='name_poor'>{txt}</td>"
             else:
                 return f"<td class='name_neutral'>{txt}</td>"
-        # remove perform column. performance is indicated by name color
+        elif "#" in row and val == row.get("#"):
+            if row.get("#") == "/\\":
+                return f"<td class='sma_excellent'>{txt}</td>"
+            elif row.get("#") == "\\/":
+                return f"<td class='sma_poor'>{txt}</td>"
+            else:
+                return f"<td class='sma_neutral'>{txt}</td>"      # remove perform column. performance is indicated by name color
         elif "perform" in row and val == row.get("perform"):
             return ""
         # SECTOR
@@ -120,22 +126,25 @@ def render_html_table(
     th,td { color:#333332; padding:5px 6px; border-bottom:1px solid #ced9e5; text-align:center; vertical-align:top; font-size:0.7rem;}
     th { background:#f8fafc; color:#334e68; font-weight:400; text-transform:uppercase;}
     tr:hover td { border-bottom: 1px solid #ee6c6c; border-top-color: 1px solid #ee6c6c; transition:background 0.5s ease;}
-    .name_excellent { color:#154330; background-color:#37d29b; text-align:left;}
-    .name_poor { color:#fff; background-color:f05e54; text-align:left;}
-    .name_good { color:#a3dec9; background-color:#4c7868; text-align:left;}
-    .name_weak { color:#593a1a; background-color:#eca865; text-align:left;}
-    .name_neutral { color:#747852; background-color:#ebeb7c; text-align:left;}
+    .name_excellent { color:#fff; background-color:#038911; text-align:left;}
+    .name_poor { color:#fff; background-color:#800101; text-align:left;}
+    .name_good { color:#fff; background-color:#0b6217; text-align:left;}
+    .name_weak { color:#fff; background-color:#e10c0d; text-align:left;}
+    .name_neutral { color:#fff; background-color:#eb9d00; text-align:left;}
     .small { font-size:0.55rem; color:#52667a; margin-top:10px;}
-    .positive { color:#154330; background-color:#37d29b;}
-    .negative { color:#482222; background-color:#f05e54;}
-    .small_pos { color:#a3dec9; background-color:#4c7868;}
-    .small_neg { color:#593a1a; background-color:#eca865;}
-    .neutral { color:#747852; background-color:#ebeb7c;}
+    .positive { color:#fff; background-color:#038911;}
+    .negative { color:#fff; background-color:#800101;}
+    .small_pos { color:#fff; background-color:#0b6217;}
+    .small_neg { color:#fff; background-color:#eca865;}
+    .neutral { color:#fff; background-color:#eb9d00;}
     .ticker { color:#fff; text-align:center; vertical-align: middle; border-radius:16px; font-weight:400; padding:3px 4px; background-color:#bec0bf;}
     .neg_price { color:#d64545;}
-    .pos_price { color:#709a8b;}
+    .pos_price { color:#038911;}
+    .sma_excellent { color:#038911; font-weight:600; }
+    .sma_poor { color:#d64545; font-weight:600; }
+    .sma_neutral { color:#eb9d00; font-weight:600; }
     .sma_neg { color:#d64545;}
-    .sma_pos { color:#9ccba;}
+    .sma_pos { color:#038911;}
     .name { text-align:left; font-weight:500; color:#243b53;}
     .sector { text-align:left; font-style:italic; color:#52667a;}
     a:link,

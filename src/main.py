@@ -2,6 +2,8 @@ import os
 import asyncio
 import aiohttp
 import logging
+
+from websockets import Close
 from log import configure_logging
 import yfinance as yf
 import pandas as pd
@@ -15,7 +17,6 @@ log = logging.getLogger(__name__)
 APP_TOKEN = os.environ.get("APP_TOKEN")
 USER_KEY = os.environ.get("USER_KEY")
 PUSH = os.environ.get("PUSH", "false").lower() == "true"
-TICKERS = os.environ.get("TICKERS", "MSFT,AAPL,GOOGL").split(",")
 
 FAST, SLOW, SIGNAL = 12, 26, 9
 SMA_WINDOW = 30
@@ -25,6 +26,7 @@ RSI_PERIOD = 14
 TICKERS = {
     'RHM.VI',
     'EJD.MU',
+    'F8P.BE',
     'HUT',
     'ASPI',
     'KIN2.DE',
@@ -161,191 +163,6 @@ def fetch_history(ticker: str, period="230d", interval="1d") -> pd.DataFrame:
     except Exception:
         return pd.DataFrame()
 
-
-# ---------- Signal, Score & Classification ----------
-def compute_scores(
-    ticker,
-    last,
-    macd_hist_condition,
-    price_trend,
-    band_position,
-    above_sma,
-    volume_condition,
-    pvt_trend,
-    macd_trend_5,
-    weights,
-):
-    rsi_performance_score = rsi_entry_score = rsi_exit_score = 0
-    macd_performance_score = macd_entry_score = macd_exit_score = 0
-    sma_performance_score = sma_entry_score = sma_exit_score = 0
-    vol_performance_score = vol_entry_score = vol_exit_score = 0
-    pvt_performance_score = pvt_entry_score = pvt_exit_score = 0
-
-    rsi = last["RSI"]
-    macd = last["MACD"]
-    macd_signal = last["MACD_SIGNAL"]
-    macd_hist = last["MACD_HIST"]
-
-    log.info(
-        f"Computing scores for {ticker} - Price: {last['Close']:.2f}, MACD: {macd:.4f}, Signal: {macd_signal:.4f}, Hist: {macd_hist:.4f}"
-    )
-    log.info(
-        f"Price Trend: {price_trend}, Bollinger: {band_position}, Above SMA30: {above_sma}, Volume: {volume_condition}, PVT Trend: {pvt_trend}"
-    )
-    log.info(f"MACD Histogram Condition: {macd_hist_condition}")
-    log.info(f"RSI: {rsi:.2f}")
-    log.info(f"Volume Condition: {volume_condition}, PVT Trend: {pvt_trend}")
-
-    # RSI
-    if rsi < 30:
-        rsi_entry_score += 2
-        rsi_exit_score -= 2
-        rsi_performance_score -= 2
-    elif rsi < 40:
-        rsi_entry_score += 1 * weights["RSI_entry"]
-        rsi_exit_score -= 1 * weights["RSI_exit"]
-        rsi_performance_score -= 1 * weights["RSI_performance"]
-    elif rsi > 80:
-        rsi_entry_score -= 2 * weights["RSI_entry"]
-        rsi_exit_score += 2 * weights["RSI_exit"]
-        rsi_performance_score += 2 * weights["RSI_performance"]
-    elif rsi > 70:
-        rsi_entry_score -= 1 * weights["RSI_entry"]
-        rsi_exit_score += 1 * weights["RSI_exit"]
-        rsi_performance_score += 1 * weights["RSI_performance"]
-    else:
-        rsi_performance_score += 1
-        rsi_entry_score += 0
-        rsi_exit_score += 0 if 40 <= rsi <= 60 else 0
-
-    log.info(
-        f"RSI: {rsi:.2f}, Entry Score: {rsi_entry_score}, Exit Score: {rsi_exit_score}, Performance Score: {rsi_performance_score}"
-    )
-
-    # MACD & Histogram
-    # Bullish: MACD above signal, histogram rising, both below zero (early reversal)
-    if macd > macd_signal and macd_hist_condition == "increasing" and macd < 0:
-        macd_entry_score += 3 * weights["MACD_entry"]
-        macd_exit_score += 0 * weights["MACD_exit"]
-        macd_performance_score += 2 * weights["MACD_performance"]
-
-    # Strong Bullish: MACD above signal, histogram rising, both above zero (trend continuation)
-    elif (
-        macd > macd_signal
-        and macd_hist_condition == "increasing"
-        and macd_trend_5 == "increasing"
-        and macd > 0
-    ):
-        macd_entry_score += 4 * weights["MACD_entry"]
-        macd_exit_score += 0.5 * weights["MACD_exit"]
-        macd_performance_score += 3 * weights["MACD_performance"]
-
-    # Bearish: MACD below signal, histogram falling, both above zero (early reversal down)
-    elif macd < macd_signal and macd_hist_condition == "decreasing" and macd > 0:
-        macd_entry_score += 0 * weights["MACD_entry"]
-        macd_exit_score += 3 * weights["MACD_exit"]
-        macd_performance_score += 0 * weights["MACD_performance"]
-
-    # Strong Bearish: MACD below signal, histogram falling, both below zero (trend continuation)
-    elif macd < macd_signal and macd_hist_condition == "decreasing" and macd < 0:
-        macd_entry_score += 0 * weights["MACD_entry"]
-        macd_exit_score += 4 * weights["MACD_exit"]
-        macd_performance_score -= 1 * weights["MACD_performance"]
-
-    # Weak/Neutral bullish cross (MACD > signal, histogram decreasing)
-    elif (
-        macd > macd_signal
-        and macd_hist_condition == "decreasing"
-        and macd_trend_5 != "increasing"
-    ):
-        macd_entry_score += 1 * weights["MACD_entry"]
-        macd_exit_score += 0 * weights["MACD_exit"]
-        macd_performance_score += 1 * weights["MACD_performance"]
-
-    # Weak/Neutral bearish cross (MACD < signal, histogram increasing)
-    elif macd < macd_signal and macd_hist_condition == "increasing":
-        macd_entry_score += 0 * weights["MACD_entry"]
-        macd_exit_score += 1 * weights["MACD_exit"]
-        macd_performance_score += 1 * weights["MACD_performance"]
-
-    # Neutral / no strong signal
-    else:
-        macd_entry_score += 0 * weights["MACD_entry"]
-        macd_exit_score += 0 * weights["MACD_exit"]
-        macd_performance_score += 0 * weights["MACD_performance"]
-
-    log.info(
-        f"MACD: {macd:.4f}, Signal: {macd_signal:.4f}, Hist: {macd_hist:.4f}, macd_trend_5: {macd_trend_5}, Entry Score: {macd_entry_score}, Exit Score: {macd_exit_score}, Performance Score: {macd_performance_score}"
-    )
-
-    # SMA30
-    if above_sma:
-        sma_entry_score += 1 * weights["SMA_entry"]
-        sma_exit_score += 2 * weights["SMA_exit"]
-        sma_performance_score += 1 * weights["SMA_performance"]
-    else:
-        sma_entry_score -= 1 * weights["SMA_entry"]
-        sma_exit_score -= 2 * weights["SMA_exit"]
-        sma_performance_score -= 1 * weights["SMA_performance"]
-    log.info(
-        f"SMA30: {above_sma}, Entry Score: {sma_entry_score}, Exit Score: {sma_exit_score}, Performance Score: {sma_performance_score}"
-    )
-
-    # Volume & PVT (simplified)
-    if volume_condition == "high":
-        vol_entry_score += 2 * weights["Volume_entry"]
-        vol_exit_score += 1 * weights["Volume_exit"]
-        vol_performance_score += 1 * weights["Volume_performance"]
-    elif volume_condition == "low":
-        vol_entry_score -= 1 * weights["Volume_entry"]
-        vol_exit_score -= 1 * weights["Volume_exit"]
-        vol_performance_score -= 1 * weights["Volume_performance"]
-    else:
-        vol_performance_score += 0  # normal volume, no score change
-    log.info(
-        f"Volume Condition: {volume_condition}, Entry Score: {vol_entry_score}, Exit Score: {vol_exit_score}, Performance Score: {vol_performance_score}"
-    )
-
-    if pvt_trend == "increasing":
-        pvt_entry_score += 1 * weights["PVT_entry"]
-        pvt_exit_score += 1 * weights["PVT_exit"]
-        pvt_performance_score += 1 * weights["PVT_performance"]
-    elif pvt_trend == "decreasing":
-        pvt_entry_score -= 1 * weights["PVT_entry"]
-        pvt_exit_score -= 1 * weights["PVT_exit"]
-        pvt_performance_score -= 1 * weights["PVT_performance"]
-    else:
-        pvt_performance_score += 0  # stable PVT, no score change
-    log.info(
-        f"PVT Trend: {pvt_trend}, Entry Score: {pvt_entry_score}, Exit Score: {pvt_exit_score}, Performance Score: {pvt_performance_score}"
-    )
-
-    # Aggregate scores
-    entry_score = (
-        rsi_entry_score
-        + macd_entry_score
-        + sma_entry_score
-        + vol_entry_score
-        + pvt_entry_score
-    )
-    exit_score = (
-        rsi_exit_score
-        + macd_exit_score
-        + sma_exit_score
-        + vol_exit_score
-        + pvt_exit_score
-    )
-    performance_score = (
-        rsi_performance_score
-        + macd_performance_score
-        + sma_performance_score
-        + vol_performance_score
-        + pvt_performance_score
-    )
-    log.info(
-        f"Total Entry Score: {entry_score}, Total Exit Score: {exit_score}, Total Performance Score: {performance_score}"
-    )
-    return performance_score, entry_score, exit_score
 
 
 def classify(score, mode="entry"):
@@ -711,6 +528,11 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
         if last["SMA200"] != 0
         else 0
     )
+    # SMA  MACD Trend over the last 5 periods
+    # if price is above SMA30/50/200 and SMA is increasing → positive trend
+    # if price is below SMA30/50/200 and SMA is decreasing → negative trend
+    sma30_trend = "/\\" if (last["Close"] > last["SMA30"] and last["SMA30"] > prev["SMA30"]) else "\\/" if (last["Close"] < last["SMA30"] and last["SMA30"] < prev["SMA30"]) else "="
+
 
     # ----------  compute individual scores ----------
     log.info(f"---------- Computing Scores for {ticker} ---------")
@@ -863,6 +685,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
         "signal": f"{last['MACD_SIGNAL']:.4f}",
         "histogram": f"{last['MACD_HIST']:.4f}",
         "crossover": "Yes" if crossed_up else "No",
+        "#": sma30_trend,
         "sma30": f"{above_sma30_pct:.2f}%",
         "sma50": f"{above_sma50_pct:.2f}%",
         "sma200": f"{above_sma200_pct:.2f}%",
@@ -1005,10 +828,10 @@ if __name__ == "__main__":
     configure_logging()
     log.info("Starting stock analysis...")
 
-    if os.path.exists("payload.json"):
-        import json
-        with open("payload.json", "r") as f:
-            payloads = json.load(f)
-        render_html(payloads)
-        exit()
+    # if os.path.exists("payload.json"):
+    #     import json
+    #     with open("payload.json", "r") as f:
+    #         payloads = json.load(f)
+    #     render_html(payloads)
+    #     exit()
     asyncio.run(analyze_and_alert(TICKERS))
