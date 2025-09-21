@@ -778,6 +778,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
     )
     log.info(f"PVT Scores: {pvt_scores_dict}")
 
+    # ----------  aggregate scores with weights ----------
     # . EMA200 → 20%
     # • EMA30/50 crossover → 15%
     # • EMA30/50 price relation → 10%
@@ -786,6 +787,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
     # • RSI → 10%
     # • PVTBB → 10%
     # • Bollinger Bands → 10%
+    # -------------------------------------------------------
     ema200_weight = 0.2
     ema30_50_crossover_weight = 0.15
     ema30_50_price_weight = 0.1
@@ -795,50 +797,31 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
     pvt_weight = 0.1
     bollinger_weight = 0.1
 
+
     # aggregate scores with weights
     performance_score = (
-        macd_scores_dict["Performance Score"]
-        * weights["MACD_performance"]
-        * macd_hist_weight
-        + bollinger_scores_dict["Performance Score"]
-        * weights["Bollinger_performance"]
-        * bollinger_weight
+        macd_scores_dict["Performance Score"] * weights["MACD_performance"] * macd_hist_weight
+        + bollinger_scores_dict["Performance Score"] * weights["Bollinger_performance"] * bollinger_weight
         + rsi_scores_dict["Performance Score"] * weights["RSI_performance"] * rsi_weight
-        + sma30_scores_dict["Performance Score"]
-        * weights["SMA_performance"]
-        * ema30_50_crossover_weight
-        + sma50_scores_dict["Performance Score"]
-        * weights["SMA_performance"]
-        * ema30_50_price_weight
-        + sma200_scores_dict["Performance Score"]
-        * weights["SMA_performance"]
-        * ema200_weight
+        + sma30_scores_dict["Performance Score"] * weights["SMA_performance"] * ema30_50_crossover_weight
+        + sma50_scores_dict["Performance Score"] * weights["SMA_performance"] * ema30_50_price_weight
+        + sma200_scores_dict["Performance Score"] * weights["SMA_performance"] * ema200_weight
         + pvt_scores_dict["Performance Score"] * weights["PVT_performance"] * pvt_weight
     )
     entry_score = (
         macd_scores_dict["Entry Score"] * weights["MACD_entry"] * macd_signal_weight
-        + bollinger_scores_dict["Entry Score"]
-        * weights["Bollinger_entry"]
-        * bollinger_weight
+        + bollinger_scores_dict["Entry Score"] * weights["Bollinger_entry"] * bollinger_weight
         + rsi_scores_dict["Entry Score"] * weights["RSI_entry"] * rsi_weight
-        + sma30_scores_dict["Entry Score"]
-        * weights["SMA_entry"]
-        * ema30_50_crossover_weight
-        + sma50_scores_dict["Entry Score"]
-        * weights["SMA_entry"]
-        * ema30_50_price_weight
+        + sma30_scores_dict["Entry Score"] * weights["SMA_entry"] * ema30_50_crossover_weight
+        + sma50_scores_dict["Entry Score"] * weights["SMA_entry"] * ema30_50_price_weight
         + sma200_scores_dict["Entry Score"] * weights["SMA_entry"] * ema200_weight
         + pvt_scores_dict["Entry Score"] * weights["PVT_entry"] * pvt_weight
     )
     exit_score = (
         macd_scores_dict["Exit Score"] * weights["MACD_exit"] * macd_signal_weight
-        + bollinger_scores_dict["Exit Score"]
-        * weights["Bollinger_exit"]
-        * bollinger_weight
+        + bollinger_scores_dict["Exit Score"] * weights["Bollinger_exit"] * bollinger_weight
         + rsi_scores_dict["Exit Score"] * weights["RSI_exit"] * rsi_weight
-        + sma30_scores_dict["Exit Score"]
-        * weights["SMA_exit"]
-        * ema30_50_crossover_weight
+        + sma30_scores_dict["Exit Score"] * weights["SMA_exit"] * ema30_50_crossover_weight
         + sma50_scores_dict["Exit Score"] * weights["SMA_exit"] * ema30_50_price_weight
         + sma200_scores_dict["Exit Score"] * weights["SMA_exit"] * ema200_weight
         + pvt_scores_dict["Exit Score"] * weights["PVT_exit"] * pvt_weight
@@ -1007,7 +990,7 @@ async def analyze_and_alert(tickers):
 
         except Exception as e:
             log.error(f"Error processing {ticker}: {e}")
-        # write payload to payload.json
+    # # write payload to payload.json
     # with open("payload.json", "w") as f:
     #     import json
     #     json.dump(payloads, f, indent=2)
@@ -1022,10 +1005,10 @@ if __name__ == "__main__":
     configure_logging()
     log.info("Starting stock analysis...")
 
-    # if os.path.exists("payload.json"):
-    #     import json
-    #     with open("payload.json", "r") as f:
-    #         payloads = json.load(f)
-    #     render_html(payloads)
-    #     exit()
+    if os.path.exists("payload.json"):
+        import json
+        with open("payload.json", "r") as f:
+            payloads = json.load(f)
+        render_html(payloads)
+        exit()
     asyncio.run(analyze_and_alert(TICKERS))
