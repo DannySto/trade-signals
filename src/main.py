@@ -688,7 +688,6 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
     payload = {
         "ticker": ticker,
         "name": ticker_name,
-        "sector": sector,
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
         "Δ": f"{((last['Close'] - last['YCP']) / last['YCP'] * 100):.2f}%",
@@ -709,6 +708,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
         "sma50": f"{above_sma50_pct:.2f}%",
         "sma200": f"{above_sma200_pct:.2f}%",
         "yahoo": yahoo_rec.get("verdict", "n/a"),
+        "sector": sector,
     }
 
     return payload

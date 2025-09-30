@@ -53,19 +53,21 @@ def render_html_table(
                 return f"<td class='pos_price'>{price}</td>"
             elif price < ycp:
                 return f"<td class='neg_price'>{price}</td>"
-        # NAME  
+        # NAME
         elif "name" in row and val == row.get("name"):
+            return f"<td class='name'>{txt}</td>"
+        # TICKER
+        elif "ticker" in row and val == row.get("ticker"):
             if row.get("perform") == "excellent":
-                return f"<td class='name_excellent'>{txt}</td>"
+                return f"<td class='ticker_excellent'>{txt}</td>"
             elif row.get("perform") == "good":
-                return f"<td class='name_good'>{txt}</td>"
-
+                return f"<td class='ticker_good'>{txt}</td>"
             elif row.get("perform") == "weak":
-                return f"<td class='name_weak'>{txt}</td>"
+                return f"<td class='ticker_weak'>{txt}</td>"
             elif row.get("perform") == "poor":
-                return f"<td class='name_poor'>{txt}</td>"
+                return f"<td class='ticker_poor'>{txt}</td>"
             else:
-                return f"<td class='name_neutral'>{txt}</td>"
+                return f"<td class='ticker_neutral'>{txt}</td>"
         elif "#" in row and val == row.get("#"):
             if row.get("#") == "/\\":
                 return f"<td class='sma_excellent'>{txt}</td>"
@@ -78,9 +80,6 @@ def render_html_table(
         # SECTOR
         elif "sector" in row and val == row.get("sector"):
             return f"<td class='sector'>{txt}</td>"
-        elif "<a href" in lower_txt:
-            return f"<td class='ticker'>{txt}</td>"
-
         # NEGATIVE
         elif any(word in lower_txt for word in [
             "no-entry","negative","strong-sell","poor","oversold","below",
@@ -119,25 +118,24 @@ def render_html_table(
 
     # --- CSS block ---
     css = """
-    body { font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; padding:6px; background:linear-gradient(135deg,#f0f4f8,#d9e2ec);}
-    .card { background:white; border-radius:6px; box-shadow:0 6px 10px rgba(0,0,0,0.1); padding:4px; margin:1px; overflow-x:auto;}
-    table { border-collapse:collapse; width:100%; border-radius:6px; overflow:hidden; vertical-align: middle;}
+    body { font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; padding:0px; background:linear-gradient(135deg,#f0f4f8,#d9e2ec);}
+    .card { background:white; border-radius:6px; box-shadow:0 6px 10px rgba(0,0,0,0.1); padding:0px; margin:1px; overflow:auto; position:relative;}
+    table { border-collapse:collapse; width: max-content; min-width:100%; border-radius:6px; vertical-align: middle; background:white; }
     caption { text-align:center; font-size:1rem; padding-bottom:7px; font-weight:400; color:#243b53;}
-    th,td { color:#333332; padding:5px 6px; border-bottom:1px solid #ced9e5; text-align:center; vertical-align:top; font-size:0.7rem;}
+    th,td { color:#333332; padding:5px 6px; border-bottom:1px solid #ced9e5; text-align:center; vertical-align:top; font-size:0.7rem; white-space:nowrap;}
     th { background:#f8fafc; color:#334e68; font-weight:400; text-transform:uppercase;}
-    tr:hover td { border-bottom: 1px solid #ee6c6c; border-top-color: 1px solid #ee6c6c; transition:background 0.5s ease;}
-    .name_excellent { color:#fff; background-color:#038911; text-align:left;}
-    .name_poor { color:#fff; background-color:#800101; text-align:left;}
-    .name_good { color:#fff; background-color:#0b6217; text-align:left;}
-    .name_weak { color:#fff; background-color:#e10c0d; text-align:left;}
-    .name_neutral { color:#fff; background-color:#eb9d00; text-align:left;}
+    tr:hover td { border-bottom: 1px solid #ee6c6c; transition:background 0.5s ease;}
+    .ticker_excellent { color:#fff; background-color:#038911; text-align:left;}
+    .ticker_poor { color:#fff; background-color:#800101; text-align:left;}
+    .ticker_good { color:#fff; background-color:#0b6217; text-align:left;}
+    .ticker_weak { color:#fff; background-color:#e10c0d; text-align:left;}
+    .ticker_neutral { color:#fff; background-color:#eb9d00; text-align:left;}
     .small { font-size:0.55rem; color:#52667a; margin-top:10px;}
     .positive { color:#fff; background-color:#038911;}
     .negative { color:#fff; background-color:#800101;}
     .small_pos { color:#fff; background-color:#0b6217;}
     .small_neg { color:#fff; background-color:#e10c0d;}
     .neutral { color:#fff; background-color:#eb9d00;}
-    .ticker { color:#fff; text-align:center; vertical-align: middle; border-radius:16px; font-weight:400; padding:3px 4px; background-color:#bec0bf;}
     .neg_price { color:#d64545;}
     .pos_price { color:#038911;}
     .sma_excellent { color:#038911; font-weight:600; }
@@ -147,20 +145,28 @@ def render_html_table(
     .sma_pos { color:#038911;}
     .name { text-align:left; font-weight:500; color:#243b53;}
     .sector { text-align:left; font-style:italic; color:#52667a;}
-    a:link,
-    a:visited {
-    color: #000;   /* or whatever color you prefer */
-    text-decoration: none; /* optional, removes underline */
+    .ticker { text-align:left; font-weight:500; color:#243b53;}
+    a:link, a:visited { color: #fff; font-weight:500; text-decoration: none; }
+    a:hover, a:active { color: #d5dbd9; }
+
+    /* Sticky first column - left */
+    th:first-child,
+    td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    text-align: left;
+    border-right: 1px solid #d6dde6;
+    box-shadow: 4px 0 6px -4px rgba(0,0,0,0.15);
     }
 
-    a:hover,
-    a:active {
-    color: #d5dbd9; /* optional hover/active color */
-    }
+    /* header cell must stack above body cell */
+    thead th:first-child { z-index: 6; top: 0; }
+
     @media (max-width:768px){
-      th,td{ padding:6px 2px; font-size:0.6rem;}
-      caption{ font-size:1.2rem;}
-      .small{ font-size:0.5rem;}
+    th,td{ padding:6px 2px; font-size:0.6rem;}
+    caption{ font-size:1.2rem;}
+    .small{ font-size:0.5rem;}
     }
     """
 
