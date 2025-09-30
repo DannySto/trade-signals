@@ -46,10 +46,7 @@ TICKERS = {
     'T0A.F', 
     'NMM.F', 
     'MSFT', 
-    'AMZN', 
-    'GOOGL', 
     'IBM', 
-    'META',
     'D2G.DE',
     '2OZA.BE',
     'MGC=F',
@@ -64,7 +61,11 @@ TICKERS = {
     'GC=F', 
     'SI=F', 
     'SGBS.AS', 
-    '2OZA.BE'
+    '2OZA.BE',
+    'P5X0.BE',
+    '7KY.BE',
+    '9CF.BE',
+    '1ZB.BE',
 }
 
 
