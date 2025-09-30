@@ -55,8 +55,7 @@ REVISION
 params.env
 *-images.json
 /*.yaml
-docs/
-index.html
+
 .DS_Store
 
 # test
