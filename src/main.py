@@ -27,7 +27,7 @@ RSI_PERIOD = 14
 # from tickers.json file
 with open("tickers.json", "r") as f:
     tickers = json.load(f)
-TICKERS = tickers["ticker"]
+TICKERS = tickers["tickers"]
 WATCHLIST = tickers.get("watchlist", [])
 
 
