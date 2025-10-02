@@ -2,6 +2,7 @@ import os
 import asyncio
 import aiohttp
 import logging
+import json
 
 from websockets import Close
 from log import configure_logging
@@ -23,52 +24,11 @@ SMA_WINDOW = 30
 RSI_PERIOD = 14
 
 # ---------- Tickers ----------
-TICKERS = {
-    'RHM.DE',
-    'EJD.MU',
-    'F8P.BE',
-    'HUT',
-    'VST',
-    'MU',
-    'ASPI',
-    'KIN2.DE',
-    'DRH.SG',
-    'CJ6.BE',
-    '49V.BE',
-    'BSPA.BE', 
-    'RQ0.BE', 
-    '98W.BE',
-    '49V.MU',
-    'NVDA',
-    'UAO.MU',
-    'F8P.BE',
-    'ASMI.VI',
-    'VA3.F', 
-    'YO0.F',
-    'T0A.F', 
-    'NMM.F', 
-    'MSFT', 
-    'IBM', 
-    'D2G.DE',
-    '2OZA.BE',
-    'MGC=F',
-    'ES=F',
-    'HWK.BE',
-    'PA2.F', 
-    'YO0.F', 
-    'EY3.MU',
-    'BTC-EUR', 
-    'ETH-EUR', 
-    'XRP-EUR', 
-    'GC=F', 
-    'SI=F', 
-    'SGBS.AS', 
-    '2OZA.BE',
-    'P5X0.BE',
-    '7KY.BE',
-    '9CF.BE',
-    '1ZB.BE',
-}
+# from tickers.json file
+with open("tickers.json", "r") as f:
+    tickers = json.load(f)
+TICKERS = tickers["ticker"]
+WATCHLIST = tickers.get("watchlist", [])
 
 
 # ---------- Indicator Weights ----------
