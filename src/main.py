@@ -29,6 +29,7 @@ TICKERS = {
     'F8P.BE',
     'HUT',
     'VST',
+    'MU',
     'ASPI',
     'KIN2.DE',
     'DRH.SG',
