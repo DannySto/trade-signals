@@ -27,8 +27,9 @@ RSI_PERIOD = 14
 # from tickers.json file
 with open("tickers.json", "r") as f:
     tickers = json.load(f)
-TICKERS = tickers["tickers"]
-WATCHLIST = tickers.get("watchlist", [])
+# TICKERS = tickers["tickers"]
+# WATCHLIST = tickers.get("watchlist", [])
+TICKERS = tickers["tickers"] + tickers.get("watchlist", [])
 
 
 # ---------- Indicator Weights ----------
@@ -393,7 +394,7 @@ def pvt_scores(pvt, upper_band, lower_band, mid_band=None):
     }
 
 
-def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
+def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str) -> dict:
     if df.empty or len(df) < 3:
         return None
     last, prev = df.iloc[-1], df.iloc[-2]
@@ -651,6 +652,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str) -> dict:
     payload = {
         "ticker": ticker,
         "name": ticker_name,
+        "watchlist": watchlist,
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
         "Δ": f"{((last['Close'] - last['YCP']) / last['YCP'] * 100):.2f}%",
@@ -724,7 +726,7 @@ def render_html(payload) -> None:
     """
     # Keys as columns, values as rows in the HTML table
     # loop through payload and append HTML to file index.html
-    html = render_html_table(payload, title="Stock Signals", output_file='./docs/index.html')
+    render_html_table(payload, title="Stock Signals", output_file='./docs/index.html')
     print("Wrote index.html with", len(payload), "rows")
 
 
@@ -758,18 +760,22 @@ async def analyze_and_alert(tickers):
     loop = asyncio.get_running_loop()
     # fetch all ticker names and sectors from the list and store in a dict
     tickers_info = []
-    for ticker in tickers:
+    for t in tickers:
+        ticker = t["ticker"]
+        watchlist = t["watchlist"]
+
         ticker_name, sector = await loop.run_in_executor(None, get_fund_name, ticker)
-        tickers_info.append((ticker, ticker_name, sector))
+        tickers_info.append((ticker, ticker_name, sector, watchlist))
 
 
     # create a list with ticker, ticker_name, sector
-    tickers_info = [{"ticker": ticker, "name": ticker_name, "sector": sector} for ticker, ticker_name, sector in tickers_info]
+    tickers_info = [{"ticker": ticker, "name": ticker_name, "sector": sector, "watchlist": watchlist} for ticker, ticker_name, sector, watchlist in tickers_info]
 
     for info in tickers_info:
         ticker = info["ticker"]
         ticker_name = info["name"]
         sector = info["sector"]
+        watchlist = info["watchlist"]
         log.debug(f"Analyzing {ticker_name} ({ticker}) in sector {sector}")
         # sort tickers by sector alphabetically
     tickers_info.sort(key=lambda x: x["sector"] or "")
@@ -778,6 +784,7 @@ async def analyze_and_alert(tickers):
         ticker = info["ticker"]
         ticker_name = info["name"]
         sector = info["sector"]
+        watchlist = info["watchlist"]
         try:
             # run blocking yfinance fetch in executor
             df = await loop.run_in_executor(None, fetch_history, ticker)
@@ -788,7 +795,7 @@ async def analyze_and_alert(tickers):
                 continue
             df_ind = compute_indicators(df)
             log.debug(f"Computed indicators for {ticker}")
-            payload = check_signal(df_ind, ticker_name, sector)
+            payload = check_signal(df_ind, ticker_name, sector, watchlist)
             log.debug(f"Checked signals for {ticker}")
             if payload:
                 payloads.append(payload)
