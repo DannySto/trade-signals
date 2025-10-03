@@ -12,7 +12,7 @@ def render_html_table(
     if not isinstance(rows, list):
         raise TypeError("rows must be a list of dicts")
 
-    excluded = {"yahoo_details", "perform","signal", "histogram", "last_close", "sma30_value"}
+    excluded = {"yahoo_details", "perform","signal", "histogram", "last_close", "sma30_value", "watchlist"}
 
     # make clickable links for keys containing 'ticker'
     for r in rows:
