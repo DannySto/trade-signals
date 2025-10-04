@@ -49,6 +49,7 @@
         {"ticker": "PLUG","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "LAC","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "USAR","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "IAG","watchlist":"yes","sector":"Basic Materials"},
         {"ticker": "MU","watchlist":"yes","sector":"Information Technology"}
     ]
 }
