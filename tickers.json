@@ -45,6 +45,10 @@
         {"ticker": "0V6.MU","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "ZT1A.BE","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "YOU","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "QUBT","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "PLUG","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "LAC","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "USAR","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "MU","watchlist":"yes","sector":"Information Technology"}
     ]
 }
