@@ -107,10 +107,20 @@ def render_html_table(
 
         return f"<td>{txt}</td>"
 
-
-    # Build rows
+    # build row for table body
+    # Build rows for non-watchlist items first
     rows_html = []
-    for r in rows:
+    for r in (row for row in rows if row.get("watchlist") == "no"):  # filter out watchlist items
+        cells = [td(r.get(h, ""), r) for h in headers]
+        rows_html.append("<tr>" + "".join(cells) + "</tr>")
+    # add custom row for watchlist items
+    
+    # Build row as header for watchlist items
+    if any(row.get("watchlist") == "yes" for row in rows):
+        watchlist_header = "<tr><td colspan='{}' style='background:#f0f4f8; text-align:left; font-weight:600; color:#243b53;'>Watchlist Items</td></tr>".format(len(headers))
+        rows_html.append(watchlist_header)
+
+    for r in (row for row in rows if row.get("watchlist") == "yes"):  # add watchlist items at the end
         cells = [td(r.get(h, ""), r) for h in headers]
         rows_html.append("<tr>" + "".join(cells) + "</tr>")
 
