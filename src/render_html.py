@@ -154,7 +154,7 @@ def render_html_table(
     .sma_neg { color:#d64545;}
     .sma_pos { color:#038911;}
     .name { text-align:left; font-weight:500; color:#243b53;}
-    .sector { text-align:left; font-style:italic; color:#52667a;}
+    .sector { font-style:italic; color:#52667a;}
     .ticker { text-align:left; font-weight:500; color:#243b53;}
     a:link, a:visited { color: #fff; font-weight:500; text-decoration: none; }
     a:hover, a:active { color: #d5dbd9; }
