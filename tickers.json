@@ -52,6 +52,6 @@
         {"ticker": "IAG","watchlist":"yes","sector":"Basic Materials"},
         {"ticker": "ZM","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "RR","watchlist":"yes","sector":"Information Technology"},
-        {"ticker": "PDD","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "PDD","watchlist":"yes","sector":"Information Technology"}
     ]
 }
