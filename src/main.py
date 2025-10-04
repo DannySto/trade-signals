@@ -650,8 +650,8 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
 
 
     payload = {
-        "ticker": ticker,
-        "name": ticker_name,
+        "ticker": f"{ticker_name}({ticker})",
+        # "name": ticker_name,
         "watchlist": watchlist,
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
@@ -777,8 +777,8 @@ async def analyze_and_alert(tickers):
         sector = info["sector"]
         watchlist = info["watchlist"]
         log.debug(f"Analyzing {ticker_name} ({ticker}) in sector {sector}")
-        # sort tickers by sector alphabetically
-    tickers_info.sort(key=lambda x: x["sector"] or "")
+        # sort tickers by ticker_name alphabetically
+    tickers_info.sort(key=lambda x: x["name"] or "")
 
     for info in tickers_info:
         ticker = info["ticker"]
