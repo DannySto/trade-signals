@@ -50,6 +50,8 @@
         {"ticker": "LAC","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "USAR","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "IAG","watchlist":"yes","sector":"Basic Materials"},
-        {"ticker": "MU","watchlist":"yes","sector":"Information Technology"}
+        {"ticker": "ZM","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "RR","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "PDD","watchlist":"yes","sector":"Information Technology"},
     ]
 }
