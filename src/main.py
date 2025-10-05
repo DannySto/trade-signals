@@ -650,8 +650,8 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
 
 
     payload = {
-        "ticker": f"{ticker_name}({ticker})",
-        # "name": ticker_name,
+        "ticker": ticker,
+        "name": ticker_name,
         "watchlist": watchlist,
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
