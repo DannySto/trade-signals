@@ -53,8 +53,11 @@
         {"ticker": "LAC","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "USAR","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "IAG","watchlist":"yes","sector":"Basic Materials"},
+        {"ticker": "CWEN","watchlist":"yes"},
+        {"ticker": "APP","watchlist":"yes"},
         {"ticker": "ZM","watchlist":"yes","sector":"Information Technology"},
         {"ticker": "RR","watchlist":"yes","sector":"Information Technology"},
+        {"ticker": "ALAB","watchlist":"yes","sector":"semiconductor-based technology"},
         {"ticker": "PDD","watchlist":"yes","sector":"Information Technology"}
     ]
 }
