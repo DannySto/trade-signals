@@ -393,6 +393,43 @@ def pvt_scores(pvt, upper_band, lower_band, mid_band=None):
         "Performance Score": round(performance_score, 2),
     }
 
+# ---- Functie: ratio’s ophalen ----
+def get_ratios(ticker):
+    try:
+        stock = yf.Ticker(ticker)
+        info = stock.info
+
+        fcf = info.get("freeCashflow", None)
+        market_cap = info.get("marketCap", None)
+        shares = info.get("sharesOutstanding", None)
+        price = info.get("currentPrice", None)
+        roe = info.get("returnOnEquity", None)
+        pb = info.get("priceToBook", None)
+        pe = info.get("trailingPE", None)
+        de = info.get("debtToEquity", None)
+
+        if not (fcf and market_cap and shares and price):
+            return None
+
+        fcf_yield = fcf / market_cap
+        print(f"ℹ️ Gegevens voor {ticker}: P/E={pe}, P/B={pb}, D/E={de}, ROE={roe}, FCF Yield={fcf_yield:.2%}")
+
+        return {
+            "Ticker": ticker,
+            "P/E": pe,
+            "P/B": pb,
+            "Debt/Equity": de,
+            "ROE": roe,
+            "FCF": fcf,
+            "Market Cap": market_cap,
+            "Price": price,
+            "Shares": shares,
+            "FCF Yield": fcf_yield,
+            "stock": stock,
+        }
+    except Exception as e:
+        print(f"⚠️ Fout bij {ticker}: {e}")
+        return None
 
 def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str) -> dict:
     if df.empty or len(df) < 3:
@@ -648,6 +685,9 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
 
     # ticker_name, sector = get_fund_name(df.attrs["ticker"])
 
+    ratios = get_ratios(ticker)
+    print(ratios)
+
 
     payload = {
         "ticker": ticker,
@@ -665,6 +705,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
         "volume": volume_condition,
         "pvt": pvt_trend,
         "ema9": macd_trend_5,
+        "P/E": f"{ratios['P/E']:.2f}" if ratios and ratios.get("P/E") else "n/a",
         "signal": f"{last['MACD_SIGNAL']:.4f}",
         "histogram": f"{last['MACD_HIST']:.4f}",
         "macd_x": "Yes" if crossed_up else "No",
@@ -672,7 +713,13 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
         "sma30": f"{above_sma30_pct:.2f}%",
         "sma50": f"{above_sma50_pct:.2f}%",
         "sma200": f"{above_sma200_pct:.2f}%",
-        "yahoo": yahoo_rec.get("verdict", "n/a"),
+        "P/B": f"{ratios['P/B']:.2f}" if ratios and ratios.get("P/B") else "n/a",
+        "D/E": f"{ratios['Debt/Equity']:.2f}" if ratios and ratios.get("Debt/Equity") else "n/a",
+        "ROE": f"{ratios['ROE']:.2%}" if ratios and ratios.get("ROE") else "n/a",
+        "FCF Yield": f"{ratios['FCF Yield']:.2%}" if ratios and ratios.get("FCF Yield") else "n/a",
+        "market cap": f"{ratios['Market Cap']:,}" if ratios and ratios.get("Market Cap") else "n/a",
+        "shares": f"{ratios['Shares']:,}" if ratios and ratios.get("Shares") else "n/a",
+        "fcf": f"{ratios['FCF']:,}" if ratios and ratios.get("FCF") else "n/a",
         "sector": sector,
     }
 
