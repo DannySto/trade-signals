@@ -54,12 +54,14 @@
         {"ticker": "QUBT","watchlist":"yes"},
         {"ticker": "LAC","watchlist":"yes"},
         {"ticker": "USAR","watchlist":"yes"},
-        {"ticker": "IAG","watchlist":"yes"},
         {"ticker": "CWEN","watchlist":"yes"},
+        {"ticker": "9O2.MU","watchlist":"yes"},
         {"ticker": "APP","watchlist":"yes"},
         {"ticker": "ZM","watchlist":"yes"},
+        {"ticker": "WUC.SG","watchlist":"yes"},
         {"ticker": "RR","watchlist":"yes"},
         {"ticker": "ALAB","watchlist":"yes"},
         {"ticker": "PDD","watchlist":"yes"}
+
     ]
 }
