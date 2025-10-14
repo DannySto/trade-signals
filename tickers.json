@@ -47,7 +47,6 @@
         {"ticker": "1ZB.BE","watchlist":"yes"},
         {"ticker": "UAO.MU","watchlist":"yes"},
         {"ticker": "EY3.MU","watchlist":"yes"},
-        {"ticker": "D2G.DE","watchlist":"yes"},
         {"ticker": "9CF.BE","watchlist":"yes"},
         {"ticker": "7KY.BE","watchlist":"yes"},
         {"ticker": "0V6.MU","watchlist":"yes"},
@@ -61,10 +60,12 @@
         {"ticker": "ZM","watchlist":"yes"},
         {"ticker": "WUC.SG","watchlist":"yes"},
         {"ticker": "RR","watchlist":"yes"},
+        {"ticker": "AUGO","watchlist":"yes"},
+        {"ticker": "NGLOY","watchlist":"yes"},
         {"ticker": "ALAB","watchlist":"yes"},
+        {"ticker": "CTGO","watchlist":"yes"},
         {"ticker": "GCT","watchlist":"yes"},
         {"ticker": "P5X0.BE","watchlist":"yes"},
         {"ticker": "PDD","watchlist":"yes"}
-
     ]
 }

@@ -683,14 +683,21 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
     # Yahoo recommendation
     yahoo_rec = get_recommendation(df.attrs["ticker"])
 
-    #60 day earnings in percentage:  (last['Close'] - df['Close'].shift(60)) / df['Close'].shift(60) * 100
-    days_60_return = (last['Close'] - df['Close'].shift(60)) / df['Close'].shift(60) * 100
-
-    # ticker_name, sector = get_fund_name(df.attrs["ticker"])
+    # Closing Prices 60 days ago 
+    closing_price_60_days_ago = df['Close'].iloc[-61] if len(df) >= 61 else None
+    # yesterday's closing price
+    yesterday_closing_price = df['Close'].iloc[-2] if len(df) >= 2 else None
+    # Calculate percentage change from 60 days ago to yesterday
+    if closing_price_60_days_ago and yesterday_closing_price:
+        change_60_days = ((yesterday_closing_price - closing_price_60_days_ago) / closing_price_60_days_ago) * 100
+    else:
+        change_60_days = None
+    print(f"Closing price 60 days ago: {closing_price_60_days_ago}")
+    print(f"Yesterday's closing price: {yesterday_closing_price}")
+    print(f"Percentage change from 60 days ago to yesterday: {change_60_days:.2f}%" if change_60_days is not None else "n/a")
 
     ratios = get_ratios(ticker)
     print(ratios)
-
 
     payload = {
         "ticker": ticker,
@@ -699,7 +706,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
         "Δ": f"{((last['Close'] - last['YCP']) / last['YCP'] * 100):.2f}%",
-        "60d": f"{days_60_return:.2f}%",
+        "Δ60d": f"{change_60_days:.2f}%" if change_60_days is not None else "n/a",
         "perform": performance_state,
         "entry": entry_state,
         "exit": exit_state,
