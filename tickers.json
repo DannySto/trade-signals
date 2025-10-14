@@ -63,6 +63,7 @@
         {"ticker": "RR","watchlist":"yes"},
         {"ticker": "ALAB","watchlist":"yes"},
         {"ticker": "GCT","watchlist":"yes"},
+        {"ticker": "P5X0.BE","watchlist":"yes"},
         {"ticker": "PDD","watchlist":"yes"}
 
     ]
