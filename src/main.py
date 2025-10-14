@@ -683,6 +683,9 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
     # Yahoo recommendation
     yahoo_rec = get_recommendation(df.attrs["ticker"])
 
+    #60 day earnings in percentage:  (last['Close'] - df['Close'].shift(60)) / df['Close'].shift(60) * 100
+    days_60_return = (last['Close'] - df['Close'].shift(60)) / df['Close'].shift(60) * 100
+
     # ticker_name, sector = get_fund_name(df.attrs["ticker"])
 
     ratios = get_ratios(ticker)
@@ -696,6 +699,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
         "ycp": f"{last['YCP']:.2f}",
         "price": f"{last['Close']:.2f}",
         "Δ": f"{((last['Close'] - last['YCP']) / last['YCP'] * 100):.2f}%",
+        "60d": f"{days_60_return:.2f}%",
         "perform": performance_state,
         "entry": entry_state,
         "exit": exit_state,
@@ -721,6 +725,7 @@ def check_signal(df: pd.DataFrame, ticker_name: str, sector: str, watchlist: str
         "shares": f"{ratios['Shares']:,}" if ratios and ratios.get("Shares") else "n/a",
         "fcf": f"{ratios['FCF']:,}" if ratios and ratios.get("FCF") else "n/a",
         "sector": sector,
+        "yahoo_verdict": yahoo_rec.get("verdict", "n/a").lower(),
     }
 
     return payload
