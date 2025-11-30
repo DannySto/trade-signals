@@ -54,6 +54,6 @@
         {"ticker": "NGLOY","watchlist":"yes"},
         {"ticker": "MAST","watchlist":"yes"},
         {"ticker": "BITF","watchlist":"yes"},
-        {"ticker": "CTGO","watchlist":"yes"},
+        {"ticker": "CTGO","watchlist":"yes"}
     ]
 }
