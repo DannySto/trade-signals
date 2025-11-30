@@ -34,7 +34,6 @@
         {"ticker": "RIO","watchlist":"yes"},
         {"ticker": "AREC","watchlist":"yes"},
         {"ticker": "ARMN","watchlist":"yes"},
-        {"ticker": "IAL.DU","watchlist":"yes"},
         {"ticker": "WPM","watchlist":"yes"},
         {"ticker": "SANM","watchlist":"yes"},
         {"ticker": "OR","watchlist":"yes"},
@@ -46,15 +45,11 @@
         {"ticker": "ETH-EUR","watchlist":"no"},
         {"ticker": "XRP-EUR","watchlist":"no"},
         {"ticker": "IBM","watchlist":"yes"},
-        {"ticker": "SGBS.AS","watchlist":"yes"},
         {"ticker": "LAC","watchlist":"yes"},
-        {"ticker": "9O2.MU","watchlist":"yes"},
-        {"ticker": "APP","watchlist":"yes"},
         {"ticker": "AA","watchlist":"yes"},
         {"ticker": "AUGO","watchlist":"yes"},
         {"ticker": "NGLOY","watchlist":"yes"},
         {"ticker": "MAST","watchlist":"yes"},
-        {"ticker": "BITF","watchlist":"yes"},
         {"ticker": "CTGO","watchlist":"yes"}
     ]
 }
