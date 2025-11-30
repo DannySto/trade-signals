@@ -32,6 +32,7 @@
         {"ticker": "MU","watchlist":"yes"},
         {"ticker": "RIO","watchlist":"yes"},
         {"ticker": "AREC","watchlist":"yes"},
+        {"ticker": "ARMN","watchlist":"yes"},
         {"ticker": "IAL.DU","watchlist":"yes"},
         {"ticker": "OR","watchlist":"yes"},
         {"ticker": "MGC=F","watchlist":"no"},
