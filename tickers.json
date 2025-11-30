@@ -26,6 +26,7 @@
         {"ticker": "NVD.DE","watchlist":"no"},
         {"ticker": "F8P.BE","watchlist":"no"},
         {"ticker": "SSRM","watchlist":"yes"},
+        {"ticker": "AEM","watchlist":"yes"},
         {"ticker": "VUL.DU","watchlist":"no"},
         {"ticker": "HCL.DU","watchlist":"no"},
         {"ticker": "MU","watchlist":"yes"},
