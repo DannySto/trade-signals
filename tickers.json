@@ -60,6 +60,7 @@
         {"ticker": "APP","watchlist":"yes"},
         {"ticker": "ZM","watchlist":"yes"},
         {"ticker": "WUC.SG","watchlist":"yes"},
+        {"ticker": "AA","watchlist":"no"},
         {"ticker": "RR","watchlist":"yes"},
         {"ticker": "AUGO","watchlist":"yes"},
         {"ticker": "NGLOY","watchlist":"yes"},
