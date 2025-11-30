@@ -34,6 +34,7 @@
         {"ticker": "ES=F","watchlist":"no"},
         {"ticker": "HWK.BE","watchlist":"no"},
         {"ticker": "PA2.F","watchlist":"no"},
+        {"ticker": "PARR","watchlist":"no"},
         {"ticker": "YO0.F","watchlist":"no"},
         {"ticker": "BTC-EUR","watchlist":"no"},
         {"ticker": "ETH-EUR","watchlist":"no"},
