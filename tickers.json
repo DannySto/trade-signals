@@ -1,7 +1,7 @@
 {
     "tickers": [
         {"ticker": "EJD.DU","watchlist":"no"},
-        {"ticker": "V71.BE","watchlist":"no"},
+        {"ticker": "HUT","watchlist":"no"},
         {"ticker": "ASPI","watchlist":"no"},
         {"ticker": "KIN2.DE","watchlist":"no"},
         {"ticker": "DRH.SG","watchlist":"no"},
@@ -12,7 +12,7 @@
         {"ticker": "CMC","watchlist":"yes"},
         {"ticker": "CNQ","watchlist":"yes"},
         {"ticker": "KALU","watchlist":"yes"},
-        {"ticker": "EDGA.DU","watchlist":"no"},
+        {"ticker": "GFI","watchlist":"no"},
         {"ticker": "RQ0.BE","watchlist":"no"},
         {"ticker": "98W.DU","watchlist":"no"},
         {"ticker": "MU.MU","watchlist":"no"},
@@ -29,7 +29,7 @@
         {"ticker": "SSRM","watchlist":"yes"},
         {"ticker": "AEM","watchlist":"yes"},
         {"ticker": "VUL.DU","watchlist":"no"},
-        {"ticker": "HCL.DU","watchlist":"no"},
+        {"ticker": "HL","watchlist":"no"},
         {"ticker": "MU","watchlist":"yes"},
         {"ticker": "RIO","watchlist":"yes"},
         {"ticker": "AREC","watchlist":"yes"},
