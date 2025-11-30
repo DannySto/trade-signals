@@ -38,17 +38,16 @@
         {"ticker": "SANM","watchlist":"yes"},
         {"ticker": "OR","watchlist":"yes"},
         {"ticker": "HWK.BE","watchlist":"no"},
+        {"ticker": "NHYDY","watchlist":"no"},
         {"ticker": "PA2.F","watchlist":"no"},
         {"ticker": "PARR","watchlist":"no"},
         {"ticker": "YO0.F","watchlist":"no"},
         {"ticker": "BTC-EUR","watchlist":"no"},
         {"ticker": "ETH-EUR","watchlist":"no"},
         {"ticker": "XRP-EUR","watchlist":"no"},
-        {"ticker": "IBM","watchlist":"yes"},
         {"ticker": "LAC","watchlist":"yes"},
         {"ticker": "AA","watchlist":"yes"},
         {"ticker": "AUGO","watchlist":"yes"},
-        {"ticker": "NGLOY","watchlist":"yes"},
         {"ticker": "MAST","watchlist":"yes"},
         {"ticker": "CTGO","watchlist":"yes"}
     ]
