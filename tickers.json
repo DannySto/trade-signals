@@ -10,6 +10,7 @@
         {"ticker": "NMM.DE","watchlist":"no"},
         {"ticker": "CJ6.BE","watchlist":"no"},
         {"ticker": "CMC","watchlist":"yes"},
+        {"ticker": "CNQ","watchlist":"yes"},
         {"ticker": "KALU","watchlist":"yes"},
         {"ticker": "EDGA.DU","watchlist":"no"},
         {"ticker": "RQ0.BE","watchlist":"no"},
