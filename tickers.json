@@ -35,8 +35,6 @@
         {"ticker": "ARMN","watchlist":"yes"},
         {"ticker": "IAL.DU","watchlist":"yes"},
         {"ticker": "OR","watchlist":"yes"},
-        {"ticker": "MGC=F","watchlist":"no"},
-        {"ticker": "ES=F","watchlist":"no"},
         {"ticker": "HWK.BE","watchlist":"no"},
         {"ticker": "PA2.F","watchlist":"no"},
         {"ticker": "PARR","watchlist":"no"},
