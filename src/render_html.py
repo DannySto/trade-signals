@@ -19,7 +19,8 @@ def render_html_table(
         if "ticker" in r:
             ticker = r["ticker"]
             r["ticker"] = (
-                f'<a href="https://finance.yahoo.com/quote/{ticker}" target="_blank" rel="noopener noreferrer">{ticker}</a>'
+                f'<a href="https://www.zacks.com/stock/quote/{ticker}/dashboard" target="_blank" rel="noopener noreferrer">{ticker}</a>'
+                # f'<a href="https://finance.yahoo.com/quote/{ticker}" target="_blank" rel="noopener noreferrer">{ticker}</a>'
             )
 
     # Collect headers
