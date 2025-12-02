@@ -24,6 +24,7 @@
         {"ticker": "CM3.F","watchlist":"no"},
         {"ticker": "R6C.BE","watchlist":"no"},
         {"ticker": "R6C.MU","watchlist":"no"},
+        {"ticker": "EJD","watchlist":"no"},
         {"ticker": "NVD.DE","watchlist":"no"},
         {"ticker": "SSRM","watchlist":"yes"},
         {"ticker": "AEM","watchlist":"yes"},
