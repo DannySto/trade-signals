@@ -12,6 +12,7 @@
         {"ticker": "CMC","watchlist":"yes"},
         {"ticker": "CNQ","watchlist":"yes"},
         {"ticker": "KALU","watchlist":"yes"},
+        {"ticker": "BVN","watchlist":"yes"},
         {"ticker": "GFI","watchlist":"no"},
         {"ticker": "RQ0.BE","watchlist":"no"},
         {"ticker": "FLNC","watchlist":"no"},
