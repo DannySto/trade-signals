@@ -1,56 +1,92 @@
 {
     "tickers": [
-        {"ticker": "EJD.DU","watchlist":"no"},
-        {"ticker": "HUT","watchlist":"no"},
-        {"ticker": "ASPI","watchlist":"no"},
-        {"ticker": "KIN2.DE","watchlist":"no"},
-        {"ticker": "DRH.SG","watchlist":"no"},
-        {"ticker": "GZUR.DU","watchlist":"no"},
-        {"ticker": "NG3.MU","watchlist":"no"},
-        {"ticker": "NMM.DE","watchlist":"no"},
-        {"ticker": "CJ6.BE","watchlist":"no"},
-        {"ticker": "CMC","watchlist":"yes"},
-        {"ticker": "CNQ","watchlist":"yes"},
-        {"ticker": "KALU","watchlist":"yes"},
-        {"ticker": "BVN","watchlist":"yes"},
-        {"ticker": "GFI","watchlist":"no"},
-        {"ticker": "RQ0.BE","watchlist":"no"},
-        {"ticker": "FLNC","watchlist":"no"},
-        {"ticker": "MU.MU","watchlist":"no"},
-        {"ticker": "HBM","watchlist":"no"},
-        {"ticker": "NG3.DU","watchlist":"no"},
-        {"ticker": "PLUN.DU","watchlist":"no"},
-        {"ticker": "ALC.BE","watchlist":"no"},
-        {"ticker": "2OZA.BE","watchlist":"no"},
-        {"ticker": "CM3.F","watchlist":"no"},
-        {"ticker": "R6C.BE","watchlist":"no"},
-        {"ticker": "R6C.MU","watchlist":"no"},
-        {"ticker": "EJD","watchlist":"no"},
-        {"ticker": "NVD.DE","watchlist":"no"},
-        {"ticker": "SSRM","watchlist":"yes"},
-        {"ticker": "AEM","watchlist":"yes"},
-        {"ticker": "VUL.DU","watchlist":"no"},
-        {"ticker": "HL","watchlist":"no"},
-        {"ticker": "MU","watchlist":"yes"},
-        {"ticker": "RIO","watchlist":"yes"},
-        {"ticker": "AREC","watchlist":"yes"},
-        {"ticker": "SANM","watchlist":"yes"},
-        {"ticker": "ARMN","watchlist":"yes"},
-        {"ticker": "WPM","watchlist":"yes"},
-        {"ticker": "SANM","watchlist":"yes"},
-        {"ticker": "OR","watchlist":"yes"},
-        {"ticker": "HWK.BE","watchlist":"no"},
-        {"ticker": "NHYDY","watchlist":"yes"},
-        {"ticker": "PA2.F","watchlist":"no"},
-        {"ticker": "PARR","watchlist":"no"},
-        {"ticker": "YO0.F","watchlist":"no"},
-        {"ticker": "BTC-EUR","watchlist":"no"},
-        {"ticker": "ETH-EUR","watchlist":"no"},
-        {"ticker": "XRP-EUR","watchlist":"no"},
-        {"ticker": "LAC","watchlist":"yes"},
-        {"ticker": "AA","watchlist":"yes"},
-        {"ticker": "AUGO","watchlist":"yes"},
-        {"ticker": "MAST","watchlist":"yes"},
-        {"ticker": "CTGO","watchlist":"yes"}
+        {
+            "ticker": "CDM1.DU",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "AG",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "CTGO",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "SGLN.L",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "49V.DU",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "PA2.DU",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "SSLN.L",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "EQX",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "BVN",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "SAYN.DU",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "HMY",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "KIN2.DU",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "GFI",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "HCL.DU",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "OR",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "LITE",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "PARR",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "AEM",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "QBTS",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "NMM.DU",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "IAG",
+            "watchlist": "no"
+        },
+        {
+            "ticker": "HL",
+            "watchlist": "no"
+        }
     ]
 }
